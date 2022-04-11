@@ -5,37 +5,6 @@
 ;; on the command line, then restart Emacs for the changes to take effect -- or
 ;; use 'M-x doom/reload'.
 
-;; (package! rjsx-mode)
-;; (package! prettier-js)
-;; (package! import-js)
-;; (package! one-themes)
-
-
-;; ====================================
-;; General additional packages
-(package! atom-one-dark-theme)
-(package! pcre2el)
-(package! visual-regexp-steroids)
-(package! good-scroll)
-
-;; ====================================
-;; Game / Rust programming
-(package! ron-mode)
-(package! glsl-mode)
-(package! company-glsl)
-
-;; ====================================
-;; Web dev / react, typescript packages
-(package! typescript-mode)
-(package! web-mode)
-(package! tide)
-(package! yasnippet)
-(package! prettier-js)
-(package! lsp-treemacs)
-(package! example
-  :recipe (:host github :repo "mickeynp/ligature.el"))
-
-;; (package! rust-playground)
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
