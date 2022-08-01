@@ -48,3 +48,17 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+
+(package! evil-tutor)
+(package! ligature
+  :recipe (:host github :repo "mickeynp/ligature.el"))
+(package! gitmoji
+  :recipe (:host github
+           :repo "janusvm/emacs-gitmoji"
+           :files ("*.el" "data")))
+
+(unpin! org-roam)
+(package! org-roam-ui)
+
+(unpin! dash dap-mode)
+(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))

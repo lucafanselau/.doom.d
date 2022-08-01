@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Luca Fanselau"
+      user-mail-address "luca.fanselau@outlook.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -32,16 +32,48 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'one-dark-doom)
+(after! all-the-icons
+  (setq all-the-icons-color-icons nil))
+;; (setq doom-theme 'doom-one)
+;; (after! doom-modeline
+;;   (setq doom-modeline-buffer-file-name-style 'file-name))
+
+(setq doom-font (font-spec :family "MonoLisa" :size 13 :weight 'medium))
+(setq doom-big-font (font-spec :family "MonoLisa" :size 16 :weight 'bold))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+;; Some movement specific setup
+(after! avy
+  (setq avy-all-windows t))
+(after! evil-snipe
+  (setq evil-snipe-scope 'buffer))
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+(use-package! websocket
+  :after org-roam)
+
+(after! org
+  (setq org-preview-latex-default-process 'dvisvgm)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.1)))
+
+(use-package! org-roam-ui
+  :after org-roam ;; or :after org
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -74,3 +106,78 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(defun avy-goto-web-tag ()
+  (interactive)
+  (avy-jump "<[[:alnum:]]+"));
+
+(map!
+ :n "g s c" 'avy-goto-web-tag
+ ;; completion primitives
+ :i "TAB" #'completion-at-point
+ :i "C-SPC" #'completion-at-point
+ :leader
+ :n "c c" 'completion-at-point
+ :n "t t" 'treemacs-select-window)
+
+(setq-hook! '(typescript-mode-hook web-mode-hook)
+  +format-with-lsp nil)
+(after! lsp-treemacs
+  (load-library "doom-themes-ext-treemacs"))
+
+(setq pixel-scroll-precision-mode t)
+(use-package! lsp-tailwindcss :init (setq! lsp-tailwindcss-add-on-mode t))
+(setenv "DICTIONARY" "en_US")
+
+(after! tex
+  (setq TeX-master 'nil))
+
+(define-derived-mode astro-mode js-jsx-mode "astro")
+
+(setq auto-mode-alist
+      (append '((".*\\.astro\\'" . astro-mode))
+              auto-mode-alist))
+
+(after! lsp
+  (add-to-list 'lsp-language-id-configuration '(astro-mode . "astro")))
+
+
+(use-package! ligature
+  :config
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 't '("-->" "->" "->>" "-<" "--<"
+                               "-~" "]#" ".-" "!=" "!=="
+                               "#(" "#{" "#[" "#_" "#_("
+                               "/=" "/==" "|||" "||" ;; "|"
+                               "==" "===" "==>" "=>" "=>>"
+                               "=<<" "=/" ">-" ">->" ">="
+                               ">=>" "<-" "<--" "<->" "<-<"
+                               "<!--" "<|" "<||" "<|||"
+                               "<|>" "<=" "<==" "<==>" "<=>"
+                               "<=<" "<<-" "<<=" "<~" "<~>"
+                               "<~~" "~-" "~@" "~=" "~>"
+                               "~~" "~~>" ".=" "..=" "---"
+                               "{|" "[|" ".."  "..."  "..<"
+                               ".?"  "::" ":::" "::=" ":="
+                               ":>" ":<" ";;" "!!"  "!!."
+                               "!!!"  "?."  "?:" "??"  "?="
+                               "*>" "*/" "#:"
+                               "#!"  "#?"  "##" "###" "####"
+                               "#=" "/*" "/>" "//" "///"
+                               "&&" "|}" "|]" "$>" "++"
+                               "+++" "+>" "=:=" "=!=" ">:"
+                               ">>" ">>>" "<:" "<*" "<*>"
+                               "<$" "<$>" "<+" "<+>" "<>"
+                               "<<" "<<<" "</" "</>" "^="
+                               "%%" "'''" "\"\"\"" ))
+  (ligature-set-ligatures 'prog-mode '("**" "***"))
+  (ligature-set-ligatures '(html-mode nxml-mode web-mode) '("<!--" "-->" "</>" "</" "/>" "://"))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+
+;; turns out vertico mouse mode is kinda shit
+;; (use-package! vertico
+;;  :config
+;;  (vertico-mouse-mode))
