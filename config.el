@@ -56,24 +56,24 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-(use-package! websocket
-  :after org-roam)
+;; (use-package! websocket
+;;   :after org-roam)
 
 (after! org
   (setq org-preview-latex-default-process 'dvisvgm)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.1)))
 
-(use-package! org-roam-ui
-  :after org-roam ;; or :after org
-  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-  ;;         a hookable mode anymore, you're advised to pick something yourself
-  ;;         if you don't care about startup time, use
-  ;;  :hook (after-init . org-roam-ui-mode)
-  :config
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t
-        org-roam-ui-open-on-start t))
+;; (use-package! org-roam-ui
+;;   :after org-roam ;; or :after org
+;;   ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;   ;;         a hookable mode anymore, you're advised to pick something yourself
+;;   ;;         if you don't care about startup time, use
+;;   ;;  :hook (after-init . org-roam-ui-mode)
+;;   :config
+;;   (setq org-roam-ui-sync-theme t
+;;         org-roam-ui-follow t
+;;         org-roam-ui-update-on-save t
+;;         org-roam-ui-open-on-start t))
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -113,19 +113,32 @@
 (map!
  :n "g s c" 'avy-goto-web-tag
  ;; completion primitives
- :i "TAB" #'completion-at-point
+ ;;:i "TAB" #'completion-at-point
  :i "C-SPC" #'completion-at-point
+ (:prefix "C-c"
+  :i "s" #'cape-ispell
+  :i "t" #'cape-tex
+  :i "l" #'cape-line
+  :i "w" #'cape-dabbrev
+  )
+
+
  :leader
  :n "c c" 'completion-at-point
  :n "t t" 'treemacs-select-window)
 
+;; (add-hook! 'lsp-mode-hook (setq-local completion-at-point-functions
+;;             (list (cape-super-capf #'cape-dabbrev #'cape-ispell #'lsp-completion-at-point))))
+;; (add-hook! 'text-mode-hook (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+
 (setq-hook! '(typescript-mode-hook web-mode-hook)
   +format-with-lsp nil)
-(after! lsp-treemacs
-  (load-library "doom-themes-ext-treemacs"))
+;; (after! lsp-treemacs
+;;   (load-library "doom-themes-ext-treemacs"))
 
-(setq pixel-scroll-precision-mode t)
-(use-package! lsp-tailwindcss :init (setq! lsp-tailwindcss-add-on-mode t))
+;; (setq pixel-scroll-precision-mode t)
+;; (use-package! lsp-tailwindcss :init (setq! lsp-tailwindcss-add-on-mode t))
 (setenv "DICTIONARY" "en_US")
 
 (after! tex
@@ -137,8 +150,20 @@
       (append '((".*\\.astro\\'" . astro-mode))
               auto-mode-alist))
 
-(after! lsp
-  (add-to-list 'lsp-language-id-configuration '(astro-mode . "astro")))
+;; (map! :map flycheck-mode-map
+;;       (:leader
+;;        (:prefix ("c". "code")
+;;         :desc "Goto next error" "e" #'flycheck-next-error
+;;         :desc "Goto previous error" "E" #'flycheck-previous-error)))
+
+
+(map!
+ :after flymake
+ :map flymake-mode-map
+ :mn "]e" #'flymake-goto-next-error
+ :mn "[e" #'flymake-goto-prev-error)
+;; (after! lsp
+;;   (add-to-list 'lsp-language-id-configuration '(astro-mode . "astro")))
 
 
 (use-package! ligature

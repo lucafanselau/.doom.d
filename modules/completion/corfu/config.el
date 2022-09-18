@@ -37,11 +37,11 @@
 (use-package corfu
   :custom
   (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-auto nil)
-  (corfu-on-exact-match nil)
-  (corfu-quit-no-match 'separator)
-  (corfu-preselect-first nil)
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-auto nil)
+  ;; (corfu-on-exact-match nil)
+  ;; (corfu-quit-no-match 'separator)
+  ;; (corfu-preselect-first nil)
   :hook
   (doom-first-buffer . global-corfu-mode)
   :bind (:map corfu-map
@@ -84,7 +84,7 @@
 
 ;; Enable indentation+completion using the TAB key.
 ;; Completion is often bound to M-TAB.
-(setq tab-always-indent 'complete)
+(setq tab-always-indent 't)
 
 ;; Dirty hack to get c completion running
 ;; Discussion in https://github.com/minad/corfu/issues/34
