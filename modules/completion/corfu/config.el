@@ -38,26 +38,27 @@
   :custom
   (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-auto nil)
+  (corfu-auto t)
+  (corfu-cycle t)
   ;; (corfu-on-exact-match nil)
   ;; (corfu-quit-no-match 'separator)
   ;; (corfu-preselect-first nil)
   :hook
   (doom-first-buffer . global-corfu-mode)
   :bind (:map corfu-map
-         ("SPC" . corfu-insert-separator)
-         ("TAB" . corfu-next)
-         ([tab] . corfu-next)
-         ("S-TAB" . corfu-previous)
-         ([backtab] . corfu-previous)))
+              ("SPC" . corfu-insert-separator)
+              ("TAB" . corfu-next)
+              ([tab] . corfu-next)
+              ("S-TAB" . corfu-previous)
+              ([backtab] . corfu-previous)))
 
 (use-package corfu-doc
   :hook
   (corfu-mode . corfu-doc-mode)
   :bind (:map corfu-map
-         ("M-n" . corfu-doc-scroll-down)
-         ("M-p" . corfu-doc-scroll-up)
-         ("M-d" . corfu-doc-toggle)))
+              ("M-n" . corfu-doc-scroll-down)
+              ("M-p" . corfu-doc-scroll-up)
+              ("M-d" . corfu-doc-toggle)))
 
 (use-package orderless
   :when (featurep! +orderless)
@@ -78,7 +79,8 @@
   :init
   (add-to-list 'completion-at-point-functions #'cape-file-capf)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
-  (add-to-list 'completion-at-point-functions #'cape-keyword-capf))
+  ;; (add-to-list 'completion-at-point-functions #'cape-keyword-capf)
+  )
 
 (setq completion-cycle-threshold 1)
 

@@ -7,7 +7,10 @@
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "Luca Fanselau"
-      user-mail-address "luca.fanselau@outlook.com")
+      user-mail-address "luca.fanselau@outlook.com"
+      )
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode t))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -52,16 +55,25 @@
 (after! evil-snipe
   (setq evil-snipe-scope 'buffer))
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(load! "gtd")
 
-;; (use-package! websocket
-;;   :after org-roam)
+(after! eglot
+  (setq eglot-confirm-server-initiated-edits nil)
+  (setq eglot-events-buffer-size 0))
 
-(after! org
-  (setq org-preview-latex-default-process 'dvisvgm)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.1)))
+(add-hook 'eglot-managed-mode-hook
+          (lambda ()
+            ;; Show flymake diagnostics first.
+            (setq eldoc-documentation-functions
+                  (cons #'flymake-eldoc-function
+                        (remove #'flymake-eldoc-function eldoc-documentation-functions)))
+            (message "Hi from eglot callback")
+            ;; Show all eldoc feedback.
+            (setq eldoc-documentation-strategy #'eldoc-documentation-compose)))
+(after! smerge-mode
+  (map! :map smerge-mode-map
+        :n "SPC g m" smerge-basic-map))
+
 
 ;; (use-package! org-roam-ui
 ;;   :after org-roam ;; or :after org
@@ -150,6 +162,15 @@
       (append '((".*\\.astro\\'" . astro-mode))
               auto-mode-alist))
 
+(set-eglot-client! 'astro-mode '("astro-ls" "--stdio" :initalizationOptions (:typescript (:serverPath "~/dev/web/website/apps/website/tsconfig.json"))))
+(add-hook! 'astro-mode-hook 'eglot-ensure)
+
+(after! eglot
+  (advice-add 'json-parse-buffer :around
+              (lambda (orig &rest rest)
+                (while (re-search-forward "\\u0000" nil t)
+                  (replace-match ""))
+                (apply orig rest))))
 ;; (map! :map flycheck-mode-map
 ;;       (:leader
 ;;        (:prefix ("c". "code")
@@ -161,7 +182,9 @@
  :after flymake
  :map flymake-mode-map
  :mn "]e" #'flymake-goto-next-error
- :mn "[e" #'flymake-goto-prev-error)
+ :mn "[e" #'flymake-goto-prev-error
+ (:leader
+  :mn "b e" #'flymake-show-buffer-diagnostics))
 ;; (after! lsp
 ;;   (add-to-list 'lsp-language-id-configuration '(astro-mode . "astro")))
 

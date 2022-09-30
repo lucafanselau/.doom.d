@@ -1,0 +1,2 @@
+
+(print (current-buffer))
