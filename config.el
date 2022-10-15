@@ -42,7 +42,7 @@
 ;; (after! doom-modeline
 ;;   (setq doom-modeline-buffer-file-name-style 'file-name))
 
-(setq doom-font (font-spec :family "MonoLisa" :size 13 :weight 'medium))
+(setq doom-font (font-spec :family "MonoLisa" :size 11 :weight 'medium))
 (setq doom-big-font (font-spec :family "MonoLisa" :size 16 :weight 'bold))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -61,15 +61,24 @@
   (setq eglot-confirm-server-initiated-edits nil)
   (setq eglot-events-buffer-size 0))
 
+(use-package! eglot-grammarly
+  :after eglot
+  :hook ((text-mode markdown-mode). (lambda ()
+                                      (require 'eglot-grammarly)
+                                      (eglot-ensure))))
+
 (add-hook 'eglot-managed-mode-hook
           (lambda ()
             ;; Show flymake diagnostics first.
             (setq eldoc-documentation-functions
                   (cons #'flymake-eldoc-function
                         (remove #'flymake-eldoc-function eldoc-documentation-functions)))
-            (message "Hi from eglot callback")
             ;; Show all eldoc feedback.
             (setq eldoc-documentation-strategy #'eldoc-documentation-compose)))
+
+(add-hook 'web-mode-hook
+          (lambda ()
+            (setq font-lock-mode nil)))
 (after! smerge-mode
   (map! :map smerge-mode-map
         :n "SPC g m" smerge-basic-map))
@@ -123,6 +132,10 @@
   (avy-jump "<[[:alnum:]]+"));
 
 (map!
+ :leader
+ :prefix-map ("i" . "insert")
+ :desc "Gitmoji" "g" #'gitmoji-insert-emoji)
+(map!
  :n "g s c" 'avy-goto-web-tag
  ;; completion primitives
  ;;:i "TAB" #'completion-at-point
@@ -136,8 +149,7 @@
 
 
  :leader
- :n "c c" 'completion-at-point
- :n "t t" 'treemacs-select-window)
+ :n "c c" 'completion-at-point)
 
 ;; (add-hook! 'lsp-mode-hook (setq-local completion-at-point-functions
 ;;             (list (cape-super-capf #'cape-dabbrev #'cape-ispell #'lsp-completion-at-point))))
@@ -165,12 +177,12 @@
 (set-eglot-client! 'astro-mode '("astro-ls" "--stdio" :initalizationOptions (:typescript (:serverPath "~/dev/web/website/apps/website/tsconfig.json"))))
 (add-hook! 'astro-mode-hook 'eglot-ensure)
 
-(after! eglot
-  (advice-add 'json-parse-buffer :around
-              (lambda (orig &rest rest)
-                (while (re-search-forward "\\u0000" nil t)
-                  (replace-match ""))
-                (apply orig rest))))
+;; (after! eglot
+;;   (advice-add 'json-parse-buffer :around
+;;               (lambda (orig &rest rest)
+;;                 (while (re-search-forward "\\u0000" nil t)
+;;                   (replace-match ""))
+;;                 (apply orig rest))))
 ;; (map! :map flycheck-mode-map
 ;;       (:leader
 ;;        (:prefix ("c". "code")
@@ -225,7 +237,20 @@
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
 
-;; turns out vertico mouse mode is kinda shit
-;; (use-package! vertico
-;;  :config
-;;  (vertico-mouse-mode))
+;; a small little dark mode switcher
+
+(defvar dark-mode t
+  "Controls wheter dark mode is enabled or not")
+
+(defun toggle-dark-mode ()
+  (interactive)
+  (when (eq dark-mode t) (load-theme 'doom-nord-light))
+  (when (eq dark-mode nil) (load-theme 'one-dark-doom))
+  ;; reset icons, because that doesn't work automatically after the theme switch
+  (kind-icon-reset-cache)
+  (setq dark-mode (not dark-mode)))
+
+(map!
+ :leader
+ :prefix-map ("t" . "toggle")
+ :desc "Dark mode" "t" 'toggle-dark-mode)

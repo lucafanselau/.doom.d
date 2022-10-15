@@ -38,7 +38,9 @@
   :custom
   (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-auto t)
+  ;;(corfu-auto t)
+  (corfu-auto-prefix 4)
+  (corfu-auto-delay 1)
   (corfu-cycle t)
   ;; (corfu-on-exact-match nil)
   ;; (corfu-quit-no-match 'separator)
@@ -77,8 +79,8 @@
 (use-package cape
   :defer t
   :init
-  (add-to-list 'completion-at-point-functions #'cape-file-capf)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
+  ;; (add-to-list 'completion-at-point-functions #'cape-file-capf)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev-capf)
   ;; (add-to-list 'completion-at-point-functions #'cape-keyword-capf)
   )
 

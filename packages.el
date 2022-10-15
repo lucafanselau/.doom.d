@@ -58,7 +58,10 @@
            :repo "janusvm/emacs-gitmoji"
            :files ("*.el" "data")))
 
-(unpin! eglot)
+(package! eglot-grammarly
+  :recipe (:host github :repo  "emacs-grammarly/eglot-grammarly"))
+
+;;(unpin! eglot)
 ;;(unpin! org-roam)
 ;;(package! org-roam-ui)
 
