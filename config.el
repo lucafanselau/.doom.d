@@ -39,8 +39,8 @@
 
 (map!
  ;; *Movement*
- :nmo "s" #'avy-goto-char-2-below
- :nmo "S" #'avy-goto-char-2-above
+ ;; :nmo "s" #'avy-goto-char-2-below
+ ;; :nmo "S" #'avy-goto-char-2-above
  :n "g s c" 'avy-goto-web-tag
 
  ;; *Completion*
@@ -65,6 +65,12 @@
   :leader
   :n "g m" smerge-basic-map)
 
+ (:after vterm
+  :map vterm-mode-map
+  :n "C-j" #'vterm-send-down
+  :n "C-k" #'vterm-send-up)
+
+
  :leader
  (:prefix-map ("i" . "insert")
   :desc "Gitmoji" "g" #'gitmoji-insert-emoji)
@@ -79,3 +85,11 @@
 ;;         :desc "Goto previous error" "E" #'flycheck-previous-error)))
 
 ;; <--------------[ Misc ]-------------->
+;;; Useful for https://github.com/dunn/company-emoji
+;; https://www.reddit.com/r/emacs/comments/8ph0hq/i_have_converted_from_the_mac_port_to_the_ns_port/
+;; not tested with emacs26 (requires a patched Emacs version for multi-color font support)
+(if (version< "27.0" emacs-version)
+    (set-fontset-font
+     "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
+  (set-fontset-font
+   t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))

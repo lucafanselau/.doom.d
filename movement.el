@@ -6,7 +6,7 @@
   (setq evil-snipe-scope 'buffer))
 
 ;; remove s/S t/T keybindings
-(remove-hook 'doom-first-input-hook #'evil-snipe-mode)
+;; (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
 (defun avy-goto-web-tag ()
   (interactive)
