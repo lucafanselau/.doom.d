@@ -22,7 +22,11 @@
 (after! all-the-icons
   (setq all-the-icons-color-icons nil))
 
+(after! evil
+  (setq evil-want-minibuffer t))
 
+(after! emojify
+  (setq emojify-display-style 'unicode))
 
 ;; <--------------[ External files ]-------------->
 ;; Additional modules and custom files
@@ -47,6 +51,7 @@
  :i "C-SPC" #'completion-at-point
  (:prefix "C-c"
   :i "s" #'cape-ispell
+  :i "f" #'cape-file
   :i "t" #'cape-tex
   :i "l" #'cape-line
   :i "w" #'cape-dabbrev)
@@ -58,6 +63,14 @@
   :mn "[e" #'flymake-goto-prev-error
   (:leader
    :mn "b e" #'flymake-show-buffer-diagnostics) )
+
+ ;; flycheck
+ (:after flycheck
+  :map flycheck-mode-map
+  :mn "]e" #'flycheck-next-error
+  :mn "[e" #'flycheck-previous-error
+  (:leader
+   :mn "b e" #'flycheck-list-errors))
 
  ;; rebind smerge map for magit
  (:after smerge-mode

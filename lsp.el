@@ -10,6 +10,7 @@
                                       (require 'eglot-grammarly)
                                       (eglot-ensure))))
 
+
 (add-hook 'eglot-managed-mode-hook
           (lambda ()
             ;; Show flymake diagnostics first.
@@ -32,3 +33,16 @@
                 (while (search-forward "\\u0000" nil t)
                   (replace-match "" nil t)))
 	      (apply oldfn args)))
+
+(after! lsp-mode
+  (setq lsp-ui-sideline-mode nil)
+  (setq lsp-diagnostics-provider :flymake))
+
+(add-hook 'lsp-mode-hook
+          (lambda ()
+            ;; Show flymake diagnostics first.
+            (setq eldoc-documentation-functions
+                  (cons #'flymake-eldoc-function
+                        (remove #'flymake-eldoc-function eldoc-documentation-functions)))
+            ;; Show all eldoc feedback.
+            (setq eldoc-documentation-strategy #'eldoc-documentation-compose)))

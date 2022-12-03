@@ -66,4 +66,6 @@
 ;;(package! org-roam-ui)
 
 ;;(unpin! dash dap-mode)
-;;(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+
+(package! lsp-mode :recipe (:local-repo "packages/lsp-mode" :build (:not compile)))

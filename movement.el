@@ -1,7 +1,8 @@
 
 ;; Some movement specific setup
 (after! avy
-  (setq avy-all-windows t))
+  (setq avy-all-windows t)
+  (setq avy-timeout-seconds 0.2))
 (after! evil-snipe
   (setq evil-snipe-scope 'buffer))
 

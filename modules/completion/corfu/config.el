@@ -21,6 +21,9 @@
           (lambda ()
             (setf (alist-get 'lsp-capf completion-category-defaults) '((styles . (orderless))))))
 
+;; https://github.com/minad/corfu/issues/188
+(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
+
 ;; Set bindings
 (map! :i "C-@" #'completion-at-point
       :i "C-SPC" #'completion-at-point
