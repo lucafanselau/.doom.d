@@ -10,7 +10,7 @@
 (setq-hook! '(typescript-mode-hook web-mode-hook)
   +format-with-lsp nil)
 
-(use-package lsp-tailwindcss
+(use-package! lsp-tailwindcss
   :init
   (setq lsp-tailwindcss-add-on-mode t)
   (setq lsp-tailwindcss-major-modes '(rjsx-mode web-mode html-mode css-mode typescript-mode typescript-tsx-mode)))

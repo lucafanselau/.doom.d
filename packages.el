@@ -66,6 +66,11 @@
 ;;(package! org-roam-ui)
 
 ;;(unpin! dash dap-mode)
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
 
-(package! lsp-mode :recipe (:local-repo "packages/lsp-mode" :build (:not compile)))
+;; (package! posframe :recipe (:host github :repo "tumashu/posframe"))
+(unpin! lsp-mode)
+
+;; (package! lsp-mode :recipe (:local-repo "packages/lsp-mode" :build (:not compile)))

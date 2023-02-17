@@ -6,6 +6,7 @@
 
 ;; Fonts
 (setq doom-font (font-spec :family "MonoLisa" :size 11 :weight 'medium))
+(setq doom-font-increment 1)
 (setq doom-big-font (font-spec :family "MonoLisa" :size 16 :weight 'bold))
 
 (setenv "DICTIONARY" "en_US")
@@ -28,6 +29,13 @@
 (after! emojify
   (setq emojify-display-style 'unicode))
 
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook ((prog-mode markdown-mode) . copilot-mode))
+
+(after! company
+  (setq company-idle-delay 1))
+
 ;; <--------------[ External files ]-------------->
 ;; Additional modules and custom files
 (load! "theme")
@@ -36,25 +44,58 @@
 (load! "web")
 (load! "movement")
 (load! "ligatures")
+(load! "vterm-runner")
+
 
 ;; <--------------[ Keybindings ]-------------->
 ;;
 ;; Our big map tree
+;;
+(after! evil-easymotion
+  (defvar lf/fast-search-map (let ((map (make-sparse-keymap)))
+                               (set-keymap-parent map evilem-map)
+                               map))
+  (map!
+   :map lf/fast-search-map
+   ;; :desc "search tags" :m "/c" #'avy-goto-web-tag
+   ;; :desc "search closing tags" :m "/C" #'avy-goto-web-tag-closing)
+   :desc "search buffer" "b" #'consult-line
+   :desc "search project buffers" "B" #'consult-line-multi)
+
+  (map!
+   :m "/" lf/fast-search-map))
 
 (map!
  ;; *Movement*
- ;; :nmo "s" #'avy-goto-char-2-below
- ;; :nmo "S" #'avy-goto-char-2-above
- :n "g s c" 'avy-goto-web-tag
+ ;;
+ ;;
+ ;; *Copilot*
+ (:after copilot
+  :i "C-<tab>" #'copilot-accept-completion-by-word
+  :i "S-SPC" #'copilot-complete
+  (:map copilot-completion-map
+        "<tab>" 'copilot-accept-completion
+        "TAB"  'copilot-accept-completion
+        "C-RET" 'copilot-accept-completion
+        "C-k"  'copilot-kill-completion
+        "C-n"  'copilot-next-completion
+        "C-p"  'copilot-previous-completion
+        "C-g"  'copilot-abort-completion))
+
 
  ;; *Completion*
- :i "C-SPC" #'completion-at-point
- (:prefix "C-c"
-  :i "s" #'cape-ispell
-  :i "f" #'cape-file
-  :i "t" #'cape-tex
-  :i "l" #'cape-line
-  :i "w" #'cape-dabbrev)
+ (:after corfu
+  :i "C-SPC" #'completion-at-point
+  :i "C-," #'cape-dabbrev
+  (:prefix "C-c"
+   :i "s" #'cape-ispell
+   :i "f" #'cape-file
+   :i "t" #'cape-tex
+   :i "l" #'cape-line
+   :i "C-w" #'cape-dabbrev
+   :i "w" #'cape-dabbrev)
+  )
+
 
  ;; flymake
  (:after flymake
@@ -65,18 +106,18 @@
    :mn "b e" #'flymake-show-buffer-diagnostics) )
 
  ;; flycheck
- (:after flycheck
-  :map flycheck-mode-map
-  :mn "]e" #'flycheck-next-error
-  :mn "[e" #'flycheck-previous-error
-  (:leader
-   :mn "b e" #'flycheck-list-errors))
+ ;; (:after flycheck
+ ;;  :map flycheck-mode-map
+ ;;  :mn "]e" #'flycheck-next-error
+ ;;  :mn "[e" #'flycheck-previous-error
+ ;;  (:leader
+ ;;   :mn "b e" #'flycheck-list-errors))
 
  ;; rebind smerge map for magit
- (:after smerge-mode
-  :map smerge-mode-map
-  :leader
-  :n "g m" smerge-basic-map)
+ ;; (:after smerge-mode
+ ;;         (:map smerge-mode-map
+ ;;          :leader
+ ;;          :n "m" smerge-basic-map ))
 
  (:after vterm
   :map vterm-mode-map

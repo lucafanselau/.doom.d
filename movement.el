@@ -11,4 +11,9 @@
 
 (defun avy-goto-web-tag ()
   (interactive)
-  (avy-jump "<[[:alnum:]]+"));
+  (avy-jump (rx "<" (one-or-more nonl) ">")));
+
+
+(defun avy-goto-web-tag-closing ()
+  (interactive)
+  (avy-jump "</[[:alnum:]]+>"));
