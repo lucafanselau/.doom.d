@@ -72,7 +72,6 @@
  ;; *Copilot*
  (:after copilot
   :i "C-<tab>" #'copilot-accept-completion-by-word
-  :i "S-SPC" #'copilot-complete
   (:map copilot-completion-map
         "<tab>" 'copilot-accept-completion
         "TAB"  'copilot-accept-completion

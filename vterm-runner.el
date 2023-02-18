@@ -36,6 +36,15 @@
     (lf/vterm-run-command cmd (format "*script: %s*" script))))
 
 
+(defun lf/open-current ()
+  (interactive)
+  (find-file (vterm--get-pwd)))
+
+
+(map! :localleader
+      :map vterm-mode-map
+      "o" #'lf/open-current)
+
 (map!
  :leader
  :desc "Run scripts" "o s" #'lf/run-scripts)
