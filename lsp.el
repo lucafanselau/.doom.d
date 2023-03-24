@@ -43,7 +43,7 @@
 (after! lsp-mode
   (setq lsp-ui-sideline-mode nil)
   (setq lsp-ui-mode nil)
-  (setq lsp-diagnostics-provider :flymake)
+  (setq lsp-diagnostics-provider :flycheck)
   (setq lsp-auto-execute-action nil))
 
 (after! flymake

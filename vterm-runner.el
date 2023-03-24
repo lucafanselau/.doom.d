@@ -27,6 +27,7 @@
   (interactive)
   (require 'consult)
   (require 'dash)
+  (if (doom-non-file-visiting-buffer-p  (current-buffer)) (hack-dir-local-variables-non-file-buffer))
   (let* ((scripts (lf/get-scripts))
          (scripts (-map (lambda (s) (format "run %s" (car s))) scripts))
          (scripts (-concat scripts '("install")))

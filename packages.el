@@ -73,4 +73,6 @@
 ;; (package! posframe :recipe (:host github :repo "tumashu/posframe"))
 (unpin! lsp-mode)
 
+(package! gptai :recipe (:host github :repo "antonhibl/gptai" :files ("*.el")))
+
 ;; (package! lsp-mode :recipe (:local-repo "packages/lsp-mode" :build (:not compile)))

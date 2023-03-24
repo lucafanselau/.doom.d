@@ -29,6 +29,15 @@
 (after! emojify
   (setq emojify-display-style 'unicode))
 
+
+;; doom's `persp-mode' activation disables uniquify, b/c it says it breaks it.
+;; It doesn't cause big enough problems for me to worry about it, so we override
+;; the override. `persp-mode' is activated in the `doom-init-ui-hook', so we add
+;; another hook at the end of the list of hooks to set our uniquify values.
+(add-hook! 'doom-init-ui-hook
+           :append ;; ensure it gets added to the end.
+           #'(lambda () (require 'uniquify) (setq uniquify-buffer-name-style 'forward uniquify-min-dir-content 2)))
+
 ;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook ((prog-mode markdown-mode) . copilot-mode))
@@ -45,6 +54,7 @@
 (load! "movement")
 (load! "ligatures")
 (load! "vterm-runner")
+(load! "gpt")
 
 
 ;; <--------------[ Keybindings ]-------------->
@@ -64,6 +74,9 @@
 
   (map!
    :m "/" lf/fast-search-map))
+
+
+
 
 (map!
  ;; *Movement*
